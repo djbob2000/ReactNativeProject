@@ -1,4 +1,6 @@
 import { useState } from "react";
+import BackgroundImage from "../../assets/images/background/bg.jpg";
+
 import {
   ImageBackground,
   Keyboard,
@@ -39,10 +41,7 @@ export const LoginScreen = ({ navigation }) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ImageBackground
-          style={styles.bgimage}
-          source={require("../../assets/images/background/bg.jpg")}
-        >
+        <ImageBackground style={styles.bgimage} source={BackgroundImage}>
           <View
             style={{
               ...styles.container,
@@ -129,7 +128,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 32,
     marginBottom: 33,
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Bold",
     fontWeight: 500,
     fontSize: 30,
     lineHeight: 35,

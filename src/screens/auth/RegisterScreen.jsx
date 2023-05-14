@@ -1,4 +1,5 @@
 import { useState } from "react";
+import BackgroundImage from "../../assets/images/background/bg.jpg";
 import {
   Image,
   ImageBackground,
@@ -42,10 +43,7 @@ export const RegisterScreen = ({ navigation }) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ImageBackground
-          style={styles.bgimage}
-          source={require("../../assets/images/background/bg.jpg")}
-        >
+        <ImageBackground style={styles.bgimage} source={BackgroundImage}>
           <View
             style={{
               ...styles.container,
@@ -131,7 +129,7 @@ export const RegisterScreen = ({ navigation }) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity onPress={submitForm} style={styles.btn}>
+              <TouchableOpacity onPress={submitForm} style={styles.submitBtn}>
                 <Text style={{ ...styles.text, color: "#fff" }}>Sign up</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -194,7 +192,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 0,
     marginBottom: 33,
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Bold",
     fontWeight: 500,
     fontSize: 30,
     lineHeight: 35,
@@ -228,7 +226,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "#E8E8E8",
   },
-  btn: {
+  submitBtn: {
     padding: 16,
     backgroundColor: "#FF6C00",
     color: "#fff",
