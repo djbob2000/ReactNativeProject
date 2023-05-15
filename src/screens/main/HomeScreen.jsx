@@ -1,19 +1,15 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { DefaultScreenPosts } from "../nestedScreen/DefaultScreenPosts";
-import { CommentsScreen } from "../nestedScreen/CommentsScreen";
-import { MapScreen } from "../nestedScreen/MapScreen";
-import { useDispatch } from "react-redux";
 import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { authSignOutUser } from "../../redux/auth/authOperations.redux";
+import { PostsScreen } from "../nested/PostsScreen";
+import { CommentsScreen } from "../nested/CommentsScreen";
+import { MapScreen } from "../nested/MapScreen";
 
 const NestedScreen = createStackNavigator();
 
 export const PostsScreen = () => {
-  const dispatch = useDispatch();
-
   const handleLogOut = () => {
-    dispatch(authSignOutUser());
+    console.log(">>>>LogOut clicked");
   };
 
   return (
@@ -23,17 +19,22 @@ export const PostsScreen = () => {
         component={DefaultScreenPosts}
         options={{
           headerRight: () => (
-            <TouchableOpacity
-              onPress={handleLogOut}
-              style={{ paddingRight: 16 }}
-            >
+            <TouchableOpacity onPress={handleLogOut} style={styles.exitButton}>
               <Ionicons name="ios-exit-outline" size={38} color="#BDBDBD" />
             </TouchableOpacity>
           ),
         }}
       />
+
       <NestedScreen.Screen name="Comments" component={CommentsScreen} />
+
       <NestedScreen.Screen name="Map" component={MapScreen} />
     </NestedScreen.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  exitButton: {
+    paddingRight: 16,
+  },
+});
