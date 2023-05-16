@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
 import {
   Text,
   View,
@@ -11,49 +9,30 @@ import {
   SafeAreaView,
   FlatList,
 } from "react-native";
-import { getDocs } from "firebase/firestore";
-import { useDimensions } from "../../hooks/useDimensions";
-import { colRefPosts } from "../../firebase/config";
+
+import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import BackgroundImage from "../../assets/images/background/bg.jpg";
+import avatarImage from "../../assets/images/avatar/sample-avatar.jpg";
+import mapIcon from "../../assets/icons/map.png";
+import messageIcon from "../../assets/icons/message.png";
 
 export const ProfileScreen = ({ navigation }) => {
-  const [posts, setPosts] = useState([]);
-  const [showPhoto, setShowPhoto] = useState(false);
-  const [dimensions] = useDimensions();
-
-  useEffect(() => {
-    getDocs(colRefPosts).then(async (snapshot) => {
-      let collection = [];
-      await snapshot.docs.forEach((doc) =>
-        collection.push({
-          ...doc.data(),
-          docId: doc.id,
-        })
-      );
-      setPosts(collection);
-    });
-  }, []);
-
   return (
-    <ImageBackground
-      style={styles.background}
-      source={require("../../assets/images/backgrounds/PhotoBG.jpg")}
-    >
+    <ImageBackground style={styles.background} source={BackgroundImage}>
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.avatarWrapper}>
             <Image
               style={styles.avatarImage}
-              source={
-                showPhoto &&
-                require("../../assets/images/content-images/yoda.jpg")
-              }
+              source={showPhoto && avatarImage}
             />
             <TouchableOpacity
               onPress={() => setShowPhoto(!showPhoto)}
               style={{
+                position: "absolute",
                 width: 25,
                 height: 25,
-                position: "absolute",
                 bottom: 14,
                 left: showPhoto ? 100 : 107,
               }}
@@ -67,8 +46,8 @@ export const ProfileScreen = ({ navigation }) => {
                 }}
                 source={
                   showPhoto
-                    ? require("../../assets/images/icons/delete.png")
-                    : require("../../assets/images/icons/add.png")
+                    ? require("../../assets/icons/remove.png")
+                    : require("../../assets/icons/add.png")
                 }
               />
             </TouchableOpacity>
@@ -80,12 +59,11 @@ export const ProfileScreen = ({ navigation }) => {
             Profile name
           </Text>
           <FlatList
-            data={posts}
+            data={""}
             renderItem={({ item }) => (
-              <View style={{ width: dimensions, marginBottom: 34 }}>
+              <View style={{ marginBottom: 34 }}>
                 <Image
                   style={{
-                    width: dimensions,
                     height: 240,
                     marginBottom: 8,
                     borderRadius: 8,
@@ -117,9 +95,7 @@ export const ProfileScreen = ({ navigation }) => {
                   >
                     <TouchableOpacity
                       onPress={() =>
-                        navigation.navigate("Comments", {
-                          ...item,
-                        })
+                        navigation.navigate("Comments", { ...item })
                       }
                       style={{
                         flexDirection: "row",
@@ -134,7 +110,7 @@ export const ProfileScreen = ({ navigation }) => {
                           marginRight: 9,
                           resizeMode: "contain",
                         }}
-                        source={require("../../assets/images/icons/message-circle.png")}
+                        source={messageIcon}
                       />
                       <Text
                         style={{
@@ -158,7 +134,7 @@ export const ProfileScreen = ({ navigation }) => {
                         size={21}
                         color="#FF6C00"
                       />
-                      <Text style={styles.text}>152</Text>
+                      <Text style={styles.text}>153</Text>
                     </View>
                   </View>
                   <TouchableOpacity
@@ -179,7 +155,7 @@ export const ProfileScreen = ({ navigation }) => {
                         marginRight: 9,
                         resizeMode: "contain",
                       }}
-                      source={require("../../assets/images/icons/map-pin.png")}
+                      source={mapIcon}
                     />
                     <Text
                       style={{
@@ -211,14 +187,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    // justifyContent: "center",
     alignItems: "center",
   },
   avatarWrapper: {
     width: 120,
     height: 120,
     borderRadius: 16,
-    // overflow: "hidden",
     backgroundColor: "#F6F6F6",
     position: "absolute",
     top: -50,
@@ -231,7 +205,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     flex: 1,
     resizeMode: "cover",
-    // position: "absolute",
   },
   title: {
     fontSize: 30,

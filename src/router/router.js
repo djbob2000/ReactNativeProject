@@ -1,10 +1,12 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-MainTab";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Feather } from "@expo/vector-icons";
 
 import { RegisterScreen } from "../screens/auth/RegisterScreen";
 import { LoginScreen } from "../screens/auth/LoginScreen";
-import { PostsScreen } from "../screens/main/HomeScreen";
+import { HomeScreen } from "../screens/main/HomeScreen";
 import { CreatePostsScreen } from "../screens/main/CreatePostsScreen";
 import { ProfileScreen } from "../screens/main/ProfileScreen";
 
@@ -32,7 +34,7 @@ export const useRoute = () => {
   //else
   return (
     <MainTab.Navigator
-      initialRouteName="Posts"
+      initialRouteName="HomeScreen"
       tabBarOptions={{ showLabel: false }}
       sceneContainerStyle={styles.sceneStyle}
     >
@@ -52,8 +54,8 @@ export const useRoute = () => {
             <Ionicons name="ios-grid-outline" size={size} color={color} />
           ),
         })}
-        name="Posts"
-        component={PostsScreen}
+        name="HomeScreen"
+        component={HomeScreen}
       />
 
       <MainTab.Screen
