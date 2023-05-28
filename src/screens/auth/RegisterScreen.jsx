@@ -1,5 +1,5 @@
-import { useState } from "react";
-import BackgroundImage from "../../assets/images/background/bg.jpg";
+import { useState } from 'react';
+import BackgroundImage from '../../assets/images/background/bg.jpg';
 import {
   Image,
   ImageBackground,
@@ -12,12 +12,12 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
-} from "react-native";
+} from 'react-native';
 
 const initStateForm = {
-  login: "",
-  email: "",
-  password: "",
+  login: '',
+  email: '',
+  password: '',
 };
 
 export const RegisterScreen = ({ navigation }) => {
@@ -32,7 +32,7 @@ export const RegisterScreen = ({ navigation }) => {
   };
 
   const submitForm = () => {
-    console.log("registerFormData==>", registerForm);
+    console.log('registerFormData==>', registerForm);
     hideKeyboard();
     setRegisterForm(initStateForm);
   };
@@ -40,7 +40,7 @@ export const RegisterScreen = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
         <ImageBackground style={styles.bgimage} source={BackgroundImage}>
@@ -54,7 +54,7 @@ export const RegisterScreen = ({ navigation }) => {
               {isAvatar && (
                 <Image
                   style={styles.avatarImage}
-                  source={require("../../assets/images/avatar/sample-avatar.jpg")}
+                  source={require('../../assets/images/avatar/sample-avatar.jpg')}
                 />
               )}
               <TouchableOpacity
@@ -69,8 +69,8 @@ export const RegisterScreen = ({ navigation }) => {
                   }}
                   source={
                     isAvatar
-                      ? require("../../assets/icons/remove.png")
-                      : require("../../assets/icons/add.png")
+                      ? require('../../assets/icons/remove.png')
+                      : require('../../assets/icons/add.png')
                   }
                 />
               </TouchableOpacity>
@@ -82,8 +82,8 @@ export const RegisterScreen = ({ navigation }) => {
                   placeholder="Login"
                   style={styles.input}
                   value={registerForm.login}
-                  onChangeText={(value) =>
-                    setRegisterForm((prevState) => ({
+                  onChangeText={value =>
+                    setRegisterForm(prevState => ({
                       ...prevState,
                       login: value,
                     }))
@@ -96,8 +96,8 @@ export const RegisterScreen = ({ navigation }) => {
                   placeholder="E-mail"
                   style={styles.input}
                   value={registerForm.email}
-                  onChangeText={(value) =>
-                    setRegisterForm((prevState) => ({
+                  onChangeText={value =>
+                    setRegisterForm(prevState => ({
                       ...prevState,
                       email: value,
                     }))
@@ -112,8 +112,8 @@ export const RegisterScreen = ({ navigation }) => {
                   style={styles.input}
                   secureTextEntry={isVisiblePass}
                   value={registerForm.password}
-                  onChangeText={(value) =>
-                    setRegisterForm((prevState) => ({
+                  onChangeText={value =>
+                    setRegisterForm(prevState => ({
                       ...prevState,
                       password: value,
                     }))
@@ -124,17 +124,17 @@ export const RegisterScreen = ({ navigation }) => {
                   style={styles.inputBtn}
                   onPress={() => setIsVisiblePass(!isVisiblePass)}
                 >
-                  <Text style={{ ...styles.text, color: "#1B4371" }}>
-                    {isVisiblePass ? "Show" : "Hide"}
+                  <Text style={{ ...styles.text, color: '#1B4371' }}>
+                    {isVisiblePass ? 'Show' : 'Hide'}
                   </Text>
                 </TouchableOpacity>
               </View>
               <TouchableOpacity onPress={submitForm} style={styles.submitBtn}>
-                <Text style={{ ...styles.text, color: "#fff" }}>Sign up</Text>
+                <Text style={{ ...styles.text, color: '#fff' }}>Sign up</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text
-                  style={{ ...styles.text, color: "#1B4371", marginTop: 16 }}
+                  style={{ ...styles.text, color: '#1B4371', marginTop: 16 }}
                 >
                   Already have an account? Login
                 </Text>
@@ -149,12 +149,12 @@ export const RegisterScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: "relative",
+    position: 'relative',
     flex: 1,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    backgroundColor: "#fff",
-    alignItems: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
   },
   avatarWrapper: {
     width: 120,
@@ -163,73 +163,73 @@ const styles = StyleSheet.create({
     top: -50,
     left: 0,
     zIndex: 99,
-    backgroundColor: "#F6F6F6",
+    backgroundColor: '#F6F6F6',
   },
   avatarImage: {
     width: 120,
     height: 120,
     borderRadius: 16,
     flex: 1,
-    resizeMode: "cover",
-    position: "absolute",
+    resizeMode: 'cover',
+    position: 'absolute',
   },
   btnAvatar: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 14,
     width: 25,
     height: 25,
   },
-  imgAvatar: { flex: 1, resizeMode: "cover" },
+  imgAvatar: { flex: 1, resizeMode: 'cover' },
   bgimage: {
     flex: 1,
-    resizeMode: "cover",
+    resizeMode: 'cover',
   },
 
   form: {
     flex: 1,
-    alignItems: "stretch",
+    alignItems: 'stretch',
   },
   title: {
     marginTop: 0,
     marginBottom: 33,
-    fontFamily: "Roboto-Bold",
+    fontFamily: 'Roboto-Bold',
     fontWeight: 500,
     fontSize: 30,
     lineHeight: 35,
-    textAlign: "center",
+    textAlign: 'center',
     letterSpacing: 0.01,
-    color: "#212121",
+    color: '#212121',
   },
   text: {
     fontSize: 16,
-    fontWeight: "400",
-    textAlign: "center",
+    fontWeight: '400',
+    textAlign: 'center',
   },
   inputWrapper: {
-    alignItems: "stretch",
-    position: "relative",
+    alignItems: 'stretch',
+    position: 'relative',
   },
   inputBtn: {
-    position: "absolute",
-    top: "50%",
+    position: 'absolute',
+    top: '50%',
     right: 16,
-    backgroundColor: "transparent",
-    color: "#1B4371",
+    backgroundColor: 'transparent',
+    color: '#1B4371',
   },
   input: {
-    width: "100%",
+    width: '100%',
     height: 50,
     padding: 16,
     marginTop: 16,
     borderWidth: 1,
-    borderColor: "#BDBDBD",
+    borderColor: '#BDBDBD',
     borderRadius: 8,
-    backgroundColor: "#E8E8E8",
+    backgroundColor: '#E8E8E8',
   },
   submitBtn: {
     padding: 16,
-    backgroundColor: "#FF6C00",
-    color: "#fff",
+    backgroundColor: '#FF6C00',
+    color: '#fff',
     borderRadius: 100,
     marginTop: 43,
   },

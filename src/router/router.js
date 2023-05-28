@@ -1,20 +1,21 @@
-import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
-import { RegisterScreen } from "../screens/auth/RegisterScreen";
-import { LoginScreen } from "../screens/auth/LoginScreen";
-import { HomeScreen } from "../screens/main/HomeScreen";
-import { CreatePostsScreen } from "../screens/main/CreatePostsScreen";
-import { ProfileScreen } from "../screens/main/ProfileScreen";
+import { RegisterScreen } from '../screens/auth/RegisterScreen';
+import { LoginScreen } from '../screens/auth/LoginScreen';
+import { HomeScreen } from '../screens/main/HomeScreen';
+import { CreatePostsScreen } from '../screens/main/CreatePostsScreen';
+import { ProfileScreen } from '../screens/main/ProfileScreen';
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
+console.log(MainTab);
 
 export const useRoute = () => {
-  if (0) {
+  if (1) {
     return (
       <AuthStack.Navigator initialRouteName="Login">
         <AuthStack.Screen
@@ -35,14 +36,21 @@ export const useRoute = () => {
   return (
     <MainTab.Navigator
       initialRouteName="HomeScreen"
-      tabBarOptions={{ showLabel: false }}
-      sceneContainerStyle={styles.sceneStyle}
+      screenOptions={{
+        showLabel: false,
+        tabBarStyle: {
+          height: 83,
+          backgroundColor: '#fff',
+        },
+      }}
+      NavigatorContainerStyle={styles.NavigatorStyle}
     >
       <MainTab.Screen
         options={({ route, navigation }) => ({
           headerShown: false,
-          tabBarActiveTintColor: "#FF6C00",
-          headerRight: (props) => (
+          tabBarActiveTintColor: '#FF6C00',
+
+          headerRight: props => (
             <TouchableOpacity
               style={styles.exitButton}
               onPress={() => console.log(route)}
@@ -53,6 +61,7 @@ export const useRoute = () => {
           tabBarIcon: ({ focused, size, color }) => (
             <Ionicons name="ios-grid-outline" size={size} color={color} />
           ),
+          tabBarLabelStyle: { display: 'none' },
         })}
         name="HomeScreen"
         component={HomeScreen}
@@ -69,14 +78,15 @@ export const useRoute = () => {
                 <Ionicons
                   name="ios-trash-outline"
                   size={size}
-                  color={"#BDBDBD"}
+                  color={'#BDBDBD'}
                 />
               </Text>
             ) : (
               <Text style={styles.unfocusedTextStyle}>
-                <Ionicons name="ios-add" size={size} color={"#fff"} />
+                <Ionicons name="ios-add" size={size} color={'#fff'} />
               </Text>
             ),
+          tabBarLabelStyle: { display: 'none' },
         })}
         name="CreatePosts"
         component={CreatePostsScreen}
@@ -84,8 +94,8 @@ export const useRoute = () => {
 
       <MainTab.Screen
         options={{
-          tabBarActiveTintColor: "#FF6C00",
-          headerShown: false,
+          tabBarActiveTintColor: '#FF6C00',
+          tabBarLabelStyle: { display: 'none' },
           tabBarIcon: ({ focused, size, color }) => (
             <Feather name="user" size={size} color={color} />
           ),
@@ -98,26 +108,26 @@ export const useRoute = () => {
 };
 
 const styles = StyleSheet.create({
-  sceneStyle: {
-    backgroundColor: "#fff",
+  NavigatorStyle: {
+    backgroundColor: '#fff',
   },
   exitButton: { marginRight: 16 },
   focusedTextStyle: {
-    backgroundColor: "#F6F6F6",
-    overflow: "hidden",
+    backgroundColor: '#F6F6F6',
+    overflow: 'hidden',
     borderRadius: 20,
     width: 70,
     height: 40,
     padding: 7,
-    textAlign: "center",
+    textAlign: 'center',
   },
   unfocusedTextStyle: {
-    backgroundColor: "#FF6C00",
-    overflow: "hidden",
+    backgroundColor: '#FF6C00',
+    overflow: 'hidden',
     borderRadius: 20,
     width: 70,
     height: 40,
     padding: 7,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
