@@ -63,7 +63,6 @@ export const CreatePostsScreen = ({ navigation }) => {
       // Save photo to media library
       await MediaLibrary.createAssetAsync(uri);
       // Get current location
-
       const {
         coords: { latitude, longitude },
       } = await Location.getCurrentPositionAsync();

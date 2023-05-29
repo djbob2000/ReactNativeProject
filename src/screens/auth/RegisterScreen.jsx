@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import BackgroundImage from '../../assets/images/background/bg.jpg';
 import {
   Image,
@@ -13,6 +15,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+import { authStateChange } from '../../redux/auth/auth.slice';
 
 const initStateForm = {
   login: '',
@@ -21,6 +24,8 @@ const initStateForm = {
 };
 
 export const RegisterScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const [registerForm, setRegisterForm] = useState(initStateForm);
   const [isAvatar, setIsAvatar] = useState(false);
   const [isVisiblePass, setIsVisiblePass] = useState(true);
@@ -35,6 +40,7 @@ export const RegisterScreen = ({ navigation }) => {
     console.log('registerFormData==>', registerForm);
     hideKeyboard();
     setRegisterForm(initStateForm);
+    dispatch(authStateChange(true));
   };
 
   return (

@@ -9,13 +9,14 @@ import { LoginScreen } from '../screens/auth/LoginScreen';
 import { HomeScreen } from '../screens/main/HomeScreen';
 import { CreatePostsScreen } from '../screens/main/CreatePostsScreen';
 import { ProfileScreen } from '../screens/main/ProfileScreen';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAuthStatus } from '../redux/selectors';
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
-console.log(MainTab);
 
-export const useRoute = () => {
-  if (1) {
+export const useRoute = (isAuth = false) => {
+  if (!isAuth) {
     return (
       <AuthStack.Navigator initialRouteName="Login">
         <AuthStack.Screen

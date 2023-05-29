@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import BackgroundImage from '../../assets/images/background/bg.jpg';
+import { authStateChange } from '../../redux/auth/auth.slice';
 
 import {
   ImageBackground,
@@ -20,6 +23,8 @@ const initState = {
 };
 
 export const LoginScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const [loginForm, setloginForm] = useState(initState);
   const [isVisiblePass, setIsVisiblePass] = useState(true);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
@@ -33,6 +38,7 @@ export const LoginScreen = ({ navigation }) => {
     console.log('loginFormData==>', loginForm);
     hideKeyboard();
     setloginForm(initState);
+    dispatch(authStateChange(true));
   };
 
   return (
