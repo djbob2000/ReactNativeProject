@@ -69,7 +69,17 @@ export const useRoute = (isAuth = false) => {
       />
 
       <MainTab.Screen
-        options={({ route }) => ({
+        options={({ navigation, route }) => ({
+          tabBarStyle: { display: 'none' },
+          headerLeft: () => (
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color="#000"
+              style={{ marginLeft: 16 }}
+              onPress={() => navigation.goBack()}
+            />
+          ),
           tabBarIcon: ({ focused, size, color }) =>
             focused ? (
               <Text
