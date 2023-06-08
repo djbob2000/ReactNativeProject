@@ -13,20 +13,7 @@ import {
 import avatarImage from '../../assets/images/avatar/sample-avatar.jpg';
 import messageIcon from '../../assets/icons/message.png';
 import mapIcon from '../../assets/icons/map.png';
-
-//DELETE AFTER TEST
-const login = 'Alina';
-const name = 'LEsok';
-const email = 'kk@gmail.com';
-import postsImage from '../../assets/images/sample-posts-photo.jpg';
-const region = 'Zakarpattya';
-const posts = [
-  { id: 1, photo: postsImage, name, region },
-  { id: 2, photo: postsImage, name, region },
-  { id: 3, photo: postsImage, name, region },
-];
-console.log(posts);
-//DELETE AFTER TEST
+import { posts } from '../sample.data';
 
 export const PostsScreen = ({ route, navigation }) => {
   // const { width } = useWindowDimensions();
@@ -56,8 +43,10 @@ export const PostsScreen = ({ route, navigation }) => {
             />
 
             <View>
-              <Text style={styles.title}>{login}</Text>
-              <Text style={{ ...styles.text, fontSize: 11 }}>{email}</Text>
+              <Text style={styles.title}>{posts.login}</Text>
+              <Text style={{ ...styles.text, fontSize: 11 }}>
+                {posts.email}
+              </Text>
             </View>
           </View>
 
@@ -116,7 +105,7 @@ export const PostsScreen = ({ route, navigation }) => {
                         color: '#BDBDBD',
                       }}
                     >
-                      0
+                      17
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -146,7 +135,7 @@ export const PostsScreen = ({ route, navigation }) => {
                         textDecorationLine: 'underline',
                       }}
                     >
-                      {item.region}
+                      {item.regionPhoto}
                     </Text>
                   </TouchableOpacity>
                 </View>

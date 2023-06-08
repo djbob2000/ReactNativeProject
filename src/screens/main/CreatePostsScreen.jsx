@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Camera, CameraType } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import * as Location from 'expo-location';
+import * as ImagePicker from 'expo-image-picker';
 
 import { EvilIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-
+// import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
   Text,
   View,
@@ -19,14 +20,15 @@ import {
   Keyboard,
   Platform,
   ScrollView,
-  TouchableOpacity,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 
 const initState = {
   photo: null,
   titlePhoto: '',
   regionPhoto: '',
+  location: '',
 };
 
 export const CreatePostsScreen = ({ navigation }) => {
@@ -89,7 +91,7 @@ export const CreatePostsScreen = ({ navigation }) => {
         coords: { latitude, longitude },
       } = await Location.getCurrentPositionAsync();
       // Set location state
-      setLocation({ photoLocation: { latitude, longitude } });
+      // setLocation({ latitude, longitude });
 
       const reverseGeocodeResult = await Location.reverseGeocodeAsync({
         latitude,
@@ -98,23 +100,27 @@ export const CreatePostsScreen = ({ navigation }) => {
 
       if (reverseGeocodeResult.length > 0) {
         const [{ city, country }] = reverseGeocodeResult;
-
+        console.log(`${city}, ${country}`);
         setFormData(prevState => ({
           ...prevState,
           photo: uri,
-          region: `${city}, ${country}`,
+          regionPhoto: `${city}, ${country}`,
+          location: { latitude, longitude },
         }));
       } else {
         setFormData(prevState => ({
           ...prevState,
           photo: uri,
-          region: '',
+          regionPhoto: '',
+          location: { latitude, longitude },
         }));
       }
+      console.log('latitude===', latitude);
     }
   };
 
   const loadPhotoFromGallery = async () => {
+    console.log('loadPhotoFromGalleryCLEEK====');
     let userImage = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -122,7 +128,7 @@ export const CreatePostsScreen = ({ navigation }) => {
       quality: 1,
     });
     if (!userImage.canceled) {
-      formData(prevState => ({
+      setFormData(prevState => ({
         ...prevState,
         photo: userImage.assets[0].uri,
       }));
@@ -131,7 +137,7 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   const submitForm = async () => {
     console.log('Submit Form DATA');
-    console.log(formData);
+    console.log('formData=======', formData);
     hideKeyboard();
     setFormData(initState);
     navigation.navigate('HomeScreen');
@@ -157,7 +163,7 @@ export const CreatePostsScreen = ({ navigation }) => {
                     {formData.photo ? (
                       <View style={styles.photoWrap}>
                         <Image
-                          source={{ uri: formData.img }}
+                          source={{ uri: formData.photo }}
                           style={styles.photo}
                         />
                       </View>
@@ -188,12 +194,16 @@ export const CreatePostsScreen = ({ navigation }) => {
                   </View>
                   {formData.photo ? (
                     <TouchableOpacity
-                      onPress={() =>
+                      onPress={() => {
+                        console.log(
+                          '🚀 ~ file: CreatePostsScreen.jsx:198 ~ CreatePostsScreen ~ formData:',
+                          formData
+                        );
                         setFormData(prevState => ({
                           ...prevState,
                           photo: null,
-                        }))
-                      }
+                        }));
+                      }}
                     >
                       <Text
                         style={{ marginTop: 8, fontSize: 16, color: '#BDBDBD' }}
@@ -234,7 +244,11 @@ export const CreatePostsScreen = ({ navigation }) => {
                   </View>
                   <View style={styles.inputWrap}>
                     <TextInput
-                      style={{ ...styles.input, marginTop: 16 }}
+                      style={{
+                        ...styles.input,
+                        marginTop: 16,
+                        paddingLeft: 32,
+                      }}
                       placeholderTextColor={'#BDBDBD'}
                       value={formData.regionPhoto}
                       onChange={({ nativeEvent: { text } }) =>
@@ -247,11 +261,17 @@ export const CreatePostsScreen = ({ navigation }) => {
                     <View
                       style={{
                         ...styles.locationPlaceholderWrap,
-                        display: formData.regionPhoto.length ? 'none' : 'flex',
                       }}
                     >
                       <Feather name="map-pin" size={24} color="#BDBDBD" />
-                      <Text style={styles.locationPlaceholderText}>
+                      <Text
+                        style={{
+                          ...styles.locationPlaceholderText,
+                          display: formData.regionPhoto.length
+                            ? 'none'
+                            : 'flex',
+                        }}
+                      >
                         Location...
                       </Text>
                     </View>
@@ -282,10 +302,17 @@ export const CreatePostsScreen = ({ navigation }) => {
                 }}
               >
                 <TouchableOpacity
-                  style={{ ...styles.clearAllBtn }}
+                  style={{
+                    ...styles.clearAllBtn,
+                    backgroundColor: !isEmptyInput ? '#FF6C00' : '#F6F6F6',
+                  }}
                   onPress={() => setFormData(initState)}
                 >
-                  <AntDesign name="delete" size={24} color="#DADADA" />
+                  <AntDesign
+                    name="delete"
+                    size={24}
+                    color={!isEmptyInput ? '#FFFFFF' : '#DADADA'}
+                  />
                 </TouchableOpacity>
               </View>
             </View>
