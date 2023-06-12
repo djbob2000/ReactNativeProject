@@ -1,1 +1,1 @@
-export const selectAuthStatus = state => state.auth.authStatus;
+export const selectAuthStatus = state => state.auth.stateChange;

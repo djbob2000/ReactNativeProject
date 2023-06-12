@@ -1,5 +1,6 @@
-export const initialState = {
+export const initState = {
+  userId: null,
   login: null,
   email: null,
-  authStatus: false,
+  stateChange: false,
 };

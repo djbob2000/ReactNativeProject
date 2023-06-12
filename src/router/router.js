@@ -11,11 +11,17 @@ import { CreatePostsScreen } from '../screens/main/CreatePostsScreen';
 import { ProfileScreen } from '../screens/main/ProfileScreen';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthStatus } from '../redux/selectors';
+import { authSignOut } from '../redux/auth/auth.slice';
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
 export const useRoute = (isAuth = false) => {
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(authSignOut());
+  };
+
   if (!isAuth) {
     return (
       <AuthStack.Navigator initialRouteName="Login">
@@ -54,7 +60,7 @@ export const useRoute = (isAuth = false) => {
           headerRight: props => (
             <TouchableOpacity
               style={styles.exitButton}
-              onPress={() => console.log(route)}
+              onPress={() => handleLogout()}
             >
               <Ionicons name="ios-exit-outline" size={24} color="#BDBDBD" />
             </TouchableOpacity>

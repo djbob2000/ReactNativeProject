@@ -1,15 +1,20 @@
-import { createStackNavigator } from "@react-navigation/stack";
-import { TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { PostsScreen } from "../nested/PostsScreen";
-import { CommentsScreen } from "../nested/CommentsScreen";
-import { MapScreen } from "../nested/MapScreen";
+import { createStackNavigator } from '@react-navigation/stack';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { PostsScreen } from '../nested/PostsScreen';
+import { CommentsScreen } from '../nested/CommentsScreen';
+import { MapScreen } from '../nested/MapScreen';
+import { authSignOut } from '../../redux/auth/auth.slice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const NestedScreen = createStackNavigator();
 
 export const HomeScreen = () => {
+  const dispatch = useDispatch();
+
   const handleLogOut = () => {
-    console.log(">>>>LogOut clicked");
+    dispatch(authSignOut());
+    console.log('>>>>LogOut clicked');
   };
 
   return (
