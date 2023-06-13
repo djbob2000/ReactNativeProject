@@ -15,7 +15,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { authStateChange } from '../../redux/auth/auth.slice';
+import { authSignUpUser } from '../../redux/auth/auth.operations';
 
 const initStateForm = {
   login: '',
@@ -36,11 +36,16 @@ export const RegisterScreen = ({ navigation }) => {
     Keyboard.dismiss();
   };
 
-  const submitForm = () => {
-    console.log('registerFormData==>', registerForm);
-    hideKeyboard();
-    setRegisterForm(initStateForm);
-    dispatch(authStateChange(true));
+  const submitForm = async () => {
+    try {
+      console.log('registerFormData==>', registerForm);
+      hideKeyboard();
+      dispatch(authSignUpUser(registerForm));
+      setRegisterForm(initStateForm); //clear form
+    } catch (error) {
+      console.log('error', error);
+      console.log(error.message);
+    }
   };
 
   return (

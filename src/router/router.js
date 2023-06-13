@@ -16,13 +16,13 @@ import { authSignOut } from '../redux/auth/auth.slice';
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
-export const useRoute = (isAuth = false) => {
+export const useRoute = (stateChange = false) => {
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(authSignOut());
   };
 
-  if (!isAuth) {
+  if (!stateChange) {
     return (
       <AuthStack.Navigator initialRouteName="Login">
         <AuthStack.Screen

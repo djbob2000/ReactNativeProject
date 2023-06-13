@@ -14,9 +14,30 @@ import avatarImage from '../../assets/images/avatar/sample-avatar.jpg';
 import messageIcon from '../../assets/icons/message.png';
 import mapIcon from '../../assets/icons/map.png';
 import { posts } from '../sample.data';
+import { db, storage } from '../../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
 
 export const PostsScreen = ({ route, navigation }) => {
   // const { width } = useWindowDimensions();
+  const [posts, setPosts] = useState([]);
+
+  const getAllPosts = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'posts'));
+      const allPosts = querySnapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      const sortedPosts = allPosts.sort((a, b) => b.createdAt - a.createdAt);
+      setPosts(sortedPosts);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllPosts();
+  }, []);
 
   return (
     <View style={{ ...styles.container }}>

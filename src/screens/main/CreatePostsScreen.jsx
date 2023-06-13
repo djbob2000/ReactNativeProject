@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Camera, CameraType } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
-
-import { EvilIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
@@ -22,6 +21,19 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import { selectAuthUserId, selectAuthLogin } from '../../redux/selectors';
+import { auth, db, storage } from '../../firebase/config';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+  getDoc,
+  addDoc,
+  getFirestore,
+  collection,
+} from 'firebase/firestore';
 
 const initState = {
   photo: null,
@@ -31,6 +43,9 @@ const initState = {
 };
 
 export const CreatePostsScreen = ({ navigation }) => {
+  const userId = useSelector(selectAuthUserId);
+  const login = useSelector(selectAuthLogin);
+
   const [isShowKeyBoard, setIsShowKeyBoard] = useState(false);
   const [formData, setFormData] = useState(initState);
   const [cameraRef, setCameraRef] = useState(null);
@@ -131,9 +146,53 @@ export const CreatePostsScreen = ({ navigation }) => {
     }
   };
 
+  const uploadPhotoToServer = async () => {
+    try {
+      const response = await fetch(formData.photo);
+      const blob = await response.blob();
+      const uniquePostId = Date.now().toString();
+      const imageRef = ref(storage, `postImage/${uniquePostId}`);
+      await uploadBytes(imageRef, blob);
+
+      const downloadURL = await getDownloadURL(imageRef);
+
+      setFormData(prevState => ({ ...prevState, photo: downloadURL }));
+    } catch (error) {
+      console.error(
+        'Error uploading file:',
+        error.code,
+        error.message,
+        error.serverResponse
+      );
+    }
+  };
+
+  const uploadPostsToServer = async () => {
+    try {
+      await uploadPhotoToServer();
+      const { titlePhoto, regionPhoto, location } = formData;
+      const docRef = await addDoc(collection(db, 'posts'), {
+        titlePhoto,
+        regionPhoto,
+        location,
+        userId,
+        login,
+        timestamp: serverTimestamp(),
+      });
+    } catch (error) {
+      console.error(
+        'Error uploading file:',
+        error.code,
+        error.message,
+        error.serverResponse
+      );
+    }
+  };
+
   const submitForm = async () => {
     console.log('Submit Form DATA');
     console.log('formData=======', formData);
+    uploadPostsToServer();
     hideKeyboard();
     setFormData(initState);
     navigation.navigate('HomeScreen');

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font';
 import 'react-native-gesture-handler';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Text } from 'react-native';
 
 import { Provider } from 'react-redux';
-import { store } from './src/redux/store';
+import { store, persistor } from './src/redux/store';
 import { Main } from './src/components/Main/Main';
 
 export default function App() {
@@ -18,7 +20,9 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <Main />
+      <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
+        <Main />
+      </PersistGate>
     </Provider>
   );
 }

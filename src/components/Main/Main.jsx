@@ -4,18 +4,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { selectAuthStatus } from '../../redux/selectors';
 
 import { useRoute } from '../../router/router';
-import { refreshUser } from '../../redux/auth/auth.operations';
+import { authChangeStatus } from '../../redux/auth/auth.operations';
 
 export const Main = () => {
-  const isAuth = useSelector(selectAuthStatus);
+  const stateChange = useSelector(selectAuthStatus);
+  console.log('🚀 ~ file: Main.jsx:11 ~ Main ~ stateChange:', stateChange);
 
-  console.log('isAuth', isAuth);
   const dispatch = useDispatch();
 
-  const routing = useRoute(isAuth);
+  const routing = useRoute(stateChange);
 
   useEffect(() => {
-    dispatch(refreshUser());
+    dispatch(authChangeStatus());
   }, []);
 
   return <NavigationContainer>{routing}</NavigationContainer>;

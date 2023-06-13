@@ -63,7 +63,7 @@ export const LoginScreen = ({ navigation }) => {
                   onChangeText={value =>
                     setloginForm(prevState => ({
                       ...prevState,
-                      email: value,
+                      email: value.toLowerCase(),
                     }))
                   }
                   onFocus={() => setIsKeyboardVisible(true)}
