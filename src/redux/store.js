@@ -17,7 +17,7 @@ import { authSlice } from './auth/auth.slice';
 const persistConfig = {
   key: 'auth',
   storage: AsyncStorage,
-  // whitelist: ['accessToken'],
+  whitelist: ['accessToken'],
 };
 
 const rootReducer = combineReducers({

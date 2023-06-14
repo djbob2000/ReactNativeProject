@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import {
   View,
   Text,
@@ -8,25 +9,90 @@ import {
   SafeAreaView,
   FlatList,
   Image,
+  Keyboard,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import {
+  collection,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { db } from '../../firebase/config';
+import { selectAuthUserId, selectAuthLogin } from '../../redux/selectors';
+import { formatDate } from '../../services/timeConvert';
 
 export const CommentsScreen = ({ route }) => {
-  const [commentText, setCommentText] = useState('');
+  const textInputRef = useRef(null);
+  const userId = useSelector(selectAuthUserId);
+  const login = useSelector(selectAuthLogin);
+  const { photo, comments, postId } = route.params;
 
-  console.log('route.params', route.params);
+  const [commentText, setCommentText] = useState('');
+  const [allComments, setAllComments] = useState([]);
+
+  const getAllComments = async () => {
+    try {
+      const querySnapshot = await getDocs(
+        collection(db, `posts/${postId}/comments`)
+      );
+      setAllComments(
+        querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+      );
+    } catch (error) {
+      console.error(
+        'Error getAllComments:',
+        error.code,
+        error.message,
+        error.serverResponse
+      );
+    }
+  };
+
+  const addCommentToServer = async () => {
+    try {
+      const docRef = await addDoc(
+        collection(db, `posts/${postId}`, 'comments'),
+        {
+          commentText,
+          login,
+          timestamp: serverTimestamp(),
+        }
+      );
+      Keyboard.dismiss();
+      setCommentText(''); //this is not worked
+
+      textInputRef.current.clear();
+
+      getAllComments();
+      console.log('SRABOTALO');
+    } catch (error) {
+      console.error(
+        'Error addCommentToServer:',
+        error.code,
+        error.message,
+        error.serverResponse
+      );
+    }
+  };
+
+  useEffect(() => {
+    getAllComments();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View>
-        <Image source={route.params.photo} style={styles.image} />
+        <Image source={{ uri: photo }} style={styles.image} />
       </View>
       <SafeAreaView style={styles.commentsContainer}>
         <FlatList
-          data={route.params.allComments}
+          data={allComments}
           renderItem={({ item }) => (
             <View style={styles.commentContainer}>
               <Text>{item.login}</Text>
-              <Text style={styles.comment}>{item.comment}</Text>
+              <Text style={styles.comment}>{item.commentText}</Text>
+              <Text>{formatDate(item.timestamp.seconds)}</Text>
             </View>
           )}
           keyExtractor={(item, index) => (item.id ? item.id : index.toString())}
@@ -36,13 +102,15 @@ export const CommentsScreen = ({ route }) => {
         <View style={styles.inputField}>
           <TextInput
             placeholder="Comment..."
+            ref={textInputRef}
             style={styles.input}
+            value={commentText}
             placeholderTextColor={'#BDBDBD'}
-            onChangeText={setCommentText}
+            onChangeText={commentText => setCommentText(commentText)}
           />
         </View>
         <TouchableOpacity
-          onPress={() => console.log('CLIKK Send comment')}
+          onPress={() => addCommentToServer()}
           style={styles.sendBtn}
         >
           <Ionicons name="arrow-up-circle" size={34} color="#FF6C00" />

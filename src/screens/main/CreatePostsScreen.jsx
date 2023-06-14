@@ -151,12 +151,13 @@ export const CreatePostsScreen = ({ navigation }) => {
       const response = await fetch(formData.photo);
       const blob = await response.blob();
       const uniquePostId = Date.now().toString();
-      const imageRef = ref(storage, `postImage/${uniquePostId}`);
+      const imageRef = ref(storage, `postImages/${uniquePostId}`);
       await uploadBytes(imageRef, blob);
 
       const downloadURL = await getDownloadURL(imageRef);
 
       setFormData(prevState => ({ ...prevState, photo: downloadURL }));
+      return downloadURL;
     } catch (error) {
       console.error(
         'Error uploading file:',
@@ -169,9 +170,10 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   const uploadPostsToServer = async () => {
     try {
-      await uploadPhotoToServer();
+      const downloadURL = await uploadPhotoToServer();
       const { titlePhoto, regionPhoto, location } = formData;
       const docRef = await addDoc(collection(db, 'posts'), {
+        photo: downloadURL,
         titlePhoto,
         regionPhoto,
         location,
@@ -179,6 +181,7 @@ export const CreatePostsScreen = ({ navigation }) => {
         login,
         timestamp: serverTimestamp(),
       });
+      setFormData(initState);
     } catch (error) {
       console.error(
         'Error uploading file:',

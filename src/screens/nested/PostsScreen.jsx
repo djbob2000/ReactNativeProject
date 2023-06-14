@@ -10,34 +10,44 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import avatarImage from '../../assets/images/avatar/sample-avatar.jpg';
+import { useIsFocused } from '@react-navigation/native';
 import messageIcon from '../../assets/icons/message.png';
 import mapIcon from '../../assets/icons/map.png';
-import { posts } from '../sample.data';
 import { db, storage } from '../../firebase/config';
 import { collection, getDocs } from 'firebase/firestore';
 
 export const PostsScreen = ({ route, navigation }) => {
+  const isFocused = useIsFocused();
   // const { width } = useWindowDimensions();
   const [posts, setPosts] = useState([]);
 
-  const getAllPosts = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'posts'));
-      const allPosts = querySnapshot.docs.map(doc => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      const sortedPosts = allPosts.sort((a, b) => b.createdAt - a.createdAt);
-      setPosts(sortedPosts);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   useEffect(() => {
+    const getAllPosts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'posts'));
+        const allPosts = querySnapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        const sortedPosts = allPosts.sort((a, b) => b.createdAt - a.createdAt);
+        console.log(
+          '🚀 ~ file: PostsScreen.jsx:31 ~ getAllPosts ~ sortedPosts:',
+          sortedPosts
+        );
+        setPosts(sortedPosts);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
     getAllPosts();
-  }, []);
+  }, [isFocused]);
+
+  console.log('🚀 ~ file: PostsScreen.jsx:23 ~ PostsScreen ~ posts:', posts);
+
+  if (!posts) {
+    return null;
+  }
 
   return (
     <View style={{ ...styles.container }}>
@@ -60,7 +70,7 @@ export const PostsScreen = ({ route, navigation }) => {
                 borderRadius: 16,
                 marginRight: 8,
               }}
-              source={avatarImage}
+              source={require('../../assets/images/avatar/sample-avatar.jpg')}
             />
 
             <View>
@@ -83,7 +93,7 @@ export const PostsScreen = ({ route, navigation }) => {
                     marginBottom: 8,
                     borderRadius: 8,
                   }}
-                  source={item.photo}
+                  source={{ uri: item.photo }}
                 />
                 <Text
                   style={{
