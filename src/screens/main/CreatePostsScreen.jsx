@@ -131,7 +131,6 @@ export const CreatePostsScreen = ({ navigation }) => {
   };
 
   const loadPhotoFromGallery = async () => {
-    console.log('loadPhotoFromGalleryCLEEK====');
     let userImage = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -193,8 +192,6 @@ export const CreatePostsScreen = ({ navigation }) => {
   };
 
   const submitForm = async () => {
-    console.log('Submit Form DATA');
-    console.log('formData=======', formData);
     uploadPostsToServer();
     hideKeyboard();
     setFormData(initState);

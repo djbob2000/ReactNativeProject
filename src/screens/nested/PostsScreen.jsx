@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import { useSelector } from 'react-redux';
 import {
   Text,
   StyleSheet,
@@ -15,11 +15,16 @@ import messageIcon from '../../assets/icons/message.png';
 import mapIcon from '../../assets/icons/map.png';
 import { db, storage } from '../../firebase/config';
 import { collection, getDocs } from 'firebase/firestore';
+import { selectAuthLogin, selectAuthEmail } from '../../redux/selectors';
+import { commentsCounter } from '../../services/commentsCounter';
 
 export const PostsScreen = ({ route, navigation }) => {
+  const userLogin = useSelector(selectAuthLogin);
+  const userEmail = useSelector(selectAuthEmail);
   const isFocused = useIsFocused();
   // const { width } = useWindowDimensions();
   const [posts, setPosts] = useState([]);
+  console.log('🚀 ~ file: PostsScreen.jsx:23 ~ PostsScreen ~ posts:', posts);
 
   useEffect(() => {
     const getAllPosts = async () => {
@@ -27,13 +32,9 @@ export const PostsScreen = ({ route, navigation }) => {
         const querySnapshot = await getDocs(collection(db, 'posts'));
         const allPosts = querySnapshot.docs.map(doc => ({
           ...doc.data(),
-          id: doc.id,
+          postId: doc.id,
         }));
-        const sortedPosts = allPosts.sort((a, b) => b.createdAt - a.createdAt);
-        console.log(
-          '🚀 ~ file: PostsScreen.jsx:31 ~ getAllPosts ~ sortedPosts:',
-          sortedPosts
-        );
+        const sortedPosts = allPosts.sort((a, b) => b.timestamp - a.timestamp);
         setPosts(sortedPosts);
       } catch (error) {
         console.log(error.message);
@@ -42,8 +43,6 @@ export const PostsScreen = ({ route, navigation }) => {
 
     getAllPosts();
   }, [isFocused]);
-
-  console.log('🚀 ~ file: PostsScreen.jsx:23 ~ PostsScreen ~ posts:', posts);
 
   if (!posts) {
     return null;
@@ -74,15 +73,13 @@ export const PostsScreen = ({ route, navigation }) => {
             />
 
             <View>
-              <Text style={styles.title}>{posts.login}</Text>
-              <Text style={{ ...styles.text, fontSize: 11 }}>
-                {posts.email}
-              </Text>
+              <Text style={styles.title}>{userLogin}</Text>
+              <Text style={{ ...styles.text, fontSize: 11 }}>{userEmail}</Text>
             </View>
           </View>
 
           <FlatList
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.postId}
             data={posts}
             renderItem={({ item }) => (
               <View style={{ marginBottom: 34 }}>
@@ -101,7 +98,7 @@ export const PostsScreen = ({ route, navigation }) => {
                     marginBottom: 11,
                   }}
                 >
-                  {item.name}
+                  {item.titlePhoto}
                 </Text>
                 <View
                   style={{
@@ -136,7 +133,7 @@ export const PostsScreen = ({ route, navigation }) => {
                         color: '#BDBDBD',
                       }}
                     >
-                      17
+                      {/* {commentsCounter(item.id)} */}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity

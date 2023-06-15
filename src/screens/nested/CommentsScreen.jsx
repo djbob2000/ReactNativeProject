@@ -27,9 +27,17 @@ export const CommentsScreen = ({ route }) => {
   const userId = useSelector(selectAuthUserId);
   const login = useSelector(selectAuthLogin);
   const { photo, comments, postId } = route.params;
+  console.log(
+    '🚀 ~ file: CommentsScreen.jsx:30 ~ CommentsScreen ~ route.params:',
+    route.params
+  );
 
   const [commentText, setCommentText] = useState('');
   const [allComments, setAllComments] = useState([]);
+  console.log(
+    '🚀 ~ file: CommentsScreen.jsx:37 ~ CommentsScreen ~ allComments:',
+    allComments
+  );
 
   const getAllComments = async () => {
     try {
@@ -65,7 +73,6 @@ export const CommentsScreen = ({ route }) => {
       textInputRef.current.clear();
 
       getAllComments();
-      console.log('SRABOTALO');
     } catch (error) {
       console.error(
         'Error addCommentToServer:',

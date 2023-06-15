@@ -8,7 +8,6 @@ import { authChangeStatus } from '../../redux/auth/auth.operations';
 
 export const Main = () => {
   const stateChange = useSelector(selectAuthStatus);
-  console.log('🚀 ~ file: Main.jsx:11 ~ Main ~ stateChange:', stateChange);
 
   const dispatch = useDispatch();
 

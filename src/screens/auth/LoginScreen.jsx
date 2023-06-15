@@ -34,7 +34,6 @@ export const LoginScreen = ({ navigation }) => {
   };
 
   const submitForm = () => {
-    console.log('loginFormData==>', loginForm);
     hideKeyboard();
     dispatch(authSignInUser(loginForm));
     setloginForm(initState);

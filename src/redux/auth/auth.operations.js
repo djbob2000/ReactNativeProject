@@ -34,8 +34,6 @@ const authSignUpUser =
 const authSignInUser =
   ({ email, password }) =>
   async (dispatch, getState) => {
-    console.log('>>>>authSignInUser<<<<');
-
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       console.log(user);
@@ -67,9 +65,7 @@ const authChangeStatus = () => async (dispatch, getState) => {
 
 const authSignOutUser = () => async (dispatch, getState) => {
   await signOut(auth)
-    .then(() => {
-      console.log('LogOut is successful');
-    })
+    .then(() => {})
     .catch(error => console.log(error));
 
   dispatch(authSignOut());
