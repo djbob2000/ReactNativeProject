@@ -20,10 +20,11 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { selectAuthUserId, selectAuthLogin } from '../../redux/selectors';
+import { CommentItem } from '../../components/CommentItem/CommentItem';
 import { formatDate } from '../../services/timeConvert';
 
 export const CommentsScreen = ({ route }) => {
-  const textInputRef = useRef(null);
+  // const textInputRef = useRef(null);
   const userId = useSelector(selectAuthUserId);
   const login = useSelector(selectAuthLogin);
   const { photo, comments, postId } = route.params;
@@ -68,9 +69,12 @@ export const CommentsScreen = ({ route }) => {
         }
       );
       Keyboard.dismiss();
-      setCommentText(''); //this is not worked
+      /**
+       * The setCommentText function is not updating the state of commentText properly. This is because the setCommentText function is asynchronous, and the state update might not happen immediately after calling setCommentText(''). To ensure that the state is properly updated, you can use the useState hook with a callback function instead. Here's the updated code:
+       */
+      setCommentText(prevCommentText => '');
 
-      textInputRef.current.clear();
+      // textInputRef.current.clear();
 
       getAllComments();
     } catch (error) {
@@ -95,21 +99,23 @@ export const CommentsScreen = ({ route }) => {
       <SafeAreaView style={styles.commentsContainer}>
         <FlatList
           data={allComments}
-          renderItem={({ item }) => (
-            <View style={styles.commentContainer}>
-              <Text>{item.login}</Text>
-              <Text style={styles.comment}>{item.commentText}</Text>
-              <Text>{formatDate(item.timestamp.seconds)}</Text>
-            </View>
+          renderItem={({ item, index }) => (
+            // <View style={styles.commentContainer}>
+            //   <Text>{item.login}</Text>
+            //   <Text style={styles.comment}>{item.commentText}</Text>
+            //   <Text>{formatDate(item.timestamp.seconds)}</Text>
+            // </View>
+            <CommentItem item={item} index={index} />
           )}
           keyExtractor={(item, index) => (item.id ? item.id : index.toString())}
         />
       </SafeAreaView>
+
       <View style={styles.inputContainer}>
         <View style={styles.inputField}>
           <TextInput
             placeholder="Comment..."
-            ref={textInputRef}
+            // ref={textInputRef}
             style={styles.input}
             value={commentText}
             placeholderTextColor={'#BDBDBD'}

@@ -17,14 +17,18 @@ import { db, storage } from '../../firebase/config';
 import { collection, getDocs } from 'firebase/firestore';
 import { selectAuthLogin, selectAuthEmail } from '../../redux/selectors';
 import { commentsCounter } from '../../services/commentsCounter';
+import { PostItem } from '../../components/PostItem/PostItem';
 
 export const PostsScreen = ({ route, navigation }) => {
+  console.log(
+    '🚀 ~ file: PostsScreen.jsx:23 ~ PostsScreen ~ navigation.navigate:',
+    navigation.navigate
+  );
   const userLogin = useSelector(selectAuthLogin);
   const userEmail = useSelector(selectAuthEmail);
   const isFocused = useIsFocused();
   // const { width } = useWindowDimensions();
   const [posts, setPosts] = useState([]);
-  console.log('🚀 ~ file: PostsScreen.jsx:23 ~ PostsScreen ~ posts:', posts);
 
   useEffect(() => {
     const getAllPosts = async () => {
@@ -47,7 +51,7 @@ export const PostsScreen = ({ route, navigation }) => {
   if (!posts) {
     return null;
   }
-
+  console.log('🚀 ~ file: PostsScreen.jsx:23 ~ PostsScreen ~ posts:', posts);
   return (
     <View style={{ ...styles.container }}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -79,95 +83,12 @@ export const PostsScreen = ({ route, navigation }) => {
           </View>
 
           <FlatList
-            keyExtractor={item => item.postId}
+            keyExtractor={(item, index) =>
+              item.postId ? item.postId : index.toString()
+            }
             data={posts}
             renderItem={({ item }) => (
-              <View style={{ marginBottom: 34 }}>
-                <Image
-                  style={{
-                    width: 360,
-                    height: 240,
-                    marginBottom: 8,
-                    borderRadius: 8,
-                  }}
-                  source={{ uri: item.photo }}
-                />
-                <Text
-                  style={{
-                    ...styles.title,
-                    marginBottom: 11,
-                  }}
-                >
-                  {item.titlePhoto}
-                </Text>
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('Comments', {
-                        ...item,
-                      })
-                    }
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Image
-                      style={{
-                        width: 18,
-                        height: 18,
-                        marginRight: 9,
-                        resizeMode: 'contain',
-                      }}
-                      source={messageIcon}
-                    />
-                    <Text
-                      style={{
-                        ...styles.text,
-                        color: '#BDBDBD',
-                      }}
-                    >
-                      {/* {commentsCounter(item.id)} */}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      alignItems: 'center',
-                      flexDirection: 'row',
-                    }}
-                    onPress={() =>
-                      navigation.navigate('Map', {
-                        ...item,
-                      })
-                    }
-                  >
-                    <Image
-                      style={{
-                        width: 18,
-                        height: 18,
-                        marginRight: 9,
-                        resizeMode: 'contain',
-                      }}
-                      source={mapIcon}
-                    />
-                    <Text
-                      style={{
-                        ...styles.text,
-                        color: '#212121',
-                        textDecorationLine: 'underline',
-                      }}
-                    >
-                      {item.regionPhoto}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <PostItem item={item} navigation={navigation} />
             )}
           />
         </View>
