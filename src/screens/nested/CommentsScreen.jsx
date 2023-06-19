@@ -28,26 +28,23 @@ export const CommentsScreen = ({ route }) => {
   const userId = useSelector(selectAuthUserId);
   const login = useSelector(selectAuthLogin);
   const { photo, comments, postId } = route.params;
-  console.log(
-    '🚀 ~ file: CommentsScreen.jsx:30 ~ CommentsScreen ~ route.params:',
-    route.params
-  );
 
   const [commentText, setCommentText] = useState('');
   const [allComments, setAllComments] = useState([]);
-  console.log(
-    '🚀 ~ file: CommentsScreen.jsx:37 ~ CommentsScreen ~ allComments:',
-    allComments
-  );
 
   const getAllComments = async () => {
     try {
       const querySnapshot = await getDocs(
         collection(db, `posts/${postId}/comments`)
       );
-      setAllComments(
-        querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+      const allComments = querySnapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      const sortedComments = allComments.sort(
+        (a, b) => b.timestamp - a.timestamp
       );
+      setAllComments(sortedComments);
     } catch (error) {
       console.error(
         'Error getAllComments:',

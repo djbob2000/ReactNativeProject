@@ -2,22 +2,31 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   postItemContainer: {
+    flex: 1,
     marginBottom: 34,
+    width: '100%',
   },
   postItemImgContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
     height: 240,
+    marginBottom: 8,
+    // overflow: 'hidden',
   },
   postItemImg: {
     width: '100%',
-    flex: 1,
+    height: '100%',
+    borderRadius: 8,
+
     resizeMode: 'cover',
-    borderRadius: 16,
   },
   postItemTitle: {
-    marginTop: 8,
-    fontFamily: 'Roboto-Regular',
+    marginBottom: 8,
+    fontFamily: 'Roboto-Medium',
+    fontStyle: 'normal',
     fontSize: 16,
+    lineHeight: 19,
     color: '#212121',
   },
   postItemInfoContainer: {

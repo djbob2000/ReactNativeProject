@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+
+import { useIsFocused } from '@react-navigation/native';
 import {
   Text,
   View,
@@ -9,29 +11,62 @@ import {
   SafeAreaView,
   FlatList,
 } from 'react-native';
-
+import {
+  selectAuthLogin,
+  selectAuthEmail,
+  selectAuthUserId,
+} from '../../redux/selectors';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../firebase/config';
+import { useDispatch, useSelector } from 'react-redux';
+import { authSignOut } from '../../redux/auth/auth.slice';
 import BackgroundImage from '../../assets/images/background/bg.jpg';
 import avatarImage from '../../assets/images/avatar/sample-avatar.jpg';
 import mapIcon from '../../assets/icons/map.png';
 import messageIcon from '../../assets/icons/message.png';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-
-//DELETE AFTER TEST
-const login = 'Alina';
-const name = 'LEsok';
-const email = 'kk@gmail.com';
-import postsImage from '../../assets/images/sample-posts-photo.jpg';
-const region = 'Zakarpattya';
-const posts = [
-  { id: 1, photo: postsImage, name, region },
-  { id: 2, photo: postsImage, name, region },
-  { id: 3, photo: postsImage, name, region },
-];
-//DELETE AFTER TEST
+import { PostItem } from '../../components/PostItem/PostItem';
 
 export const ProfileScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const userLogin = useSelector(selectAuthLogin);
+  const userEmail = useSelector(selectAuthEmail);
+  const userId = useSelector(selectAuthUserId);
+
   const [showPhoto, setShowPhoto] = useState(false);
+  const [userPosts, setUserPosts] = useState([]);
+
+  useEffect(() => {
+    const getUserPosts = async () => {
+      try {
+        const querySnapshot = await getDocs(
+          query(collection(db, 'posts'), where('userId', '==', userId))
+        );
+
+        const userPosts = querySnapshot.docs.map(doc => ({
+          ...doc.data(),
+          postId: doc.id,
+        }));
+
+        const sortedUserPosts = userPosts.sort(
+          (a, b) => b.timestamp - a.timestamp
+        );
+
+        setUserPosts(sortedUserPosts);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    getUserPosts();
+  }, [isFocused]);
+
+  const handleLogOut = () => {
+    dispatch(authSignOut());
+    console.log('>>>>LogOut clicked');
+  };
 
   return (
     <ImageBackground style={styles.background} source={BackgroundImage}>
@@ -40,7 +75,7 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={styles.avatarWrapper}>
             <Image
               style={styles.avatarImage}
-              source={showPhoto && avatarImage}
+              source={showPhoto ? avatarImage : null}
             />
             <TouchableOpacity
               onPress={() => setShowPhoto(!showPhoto)}
@@ -69,120 +104,21 @@ export const ProfileScreen = ({ navigation }) => {
           </View>
           <TouchableOpacity
             style={{ padding: 14, alignSelf: 'flex-end' }}
-            onPress={() => console.log('Press EXIT')}
+            onPress={handleLogOut}
           >
             <Ionicons name="ios-exit-outline" size={38} color="#BDBDBD" />
           </TouchableOpacity>
           <Text style={{ ...styles.title, marginTop: 33, marginBottom: 32 }}>
-            Profile name
+            {userLogin}
           </Text>
           <FlatList
-            data={posts}
+            keyExtractor={(item, index) =>
+              item.postId ? item.postId : index.toString()
+            }
+            data={userPosts}
             renderItem={({ item }) => (
-              <View style={{ width: '100%', marginBottom: 34 }}>
-                <Image
-                  style={{
-                    width: 320,
-                    height: 240,
-                    marginBottom: 8,
-                    borderRadius: 8,
-                  }}
-                  source={item.photo}
-                />
-                <Text
-                  style={{
-                    ...styles.title,
-                    marginBottom: 11,
-                    fontSize: 16,
-                  }}
-                >
-                  {item.name}
-                </Text>
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <TouchableOpacity
-                      onPress={() => console.log('CLICKK MESSAGE')}
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginRight: 22,
-                      }}
-                    >
-                      <Image
-                        style={{
-                          width: 18,
-                          height: 18,
-                          marginRight: 9,
-                          resizeMode: 'contain',
-                        }}
-                        source={messageIcon}
-                      />
-                      <Text
-                        style={{
-                          ...styles.text,
-                          color: '#BDBDBD',
-                        }}
-                      >
-                        0
-                      </Text>
-                    </TouchableOpacity>
-                    <View
-                      style={{
-                        ...styles.text,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <AntDesign
-                        style={{ marginRight: 10 }}
-                        name="like2"
-                        size={21}
-                        color="#FF6C00"
-                      />
-                      <Text style={styles.text}>152</Text>
-                    </View>
-                  </View>
-                  <TouchableOpacity
-                    style={{
-                      alignItems: 'center',
-                      flexDirection: 'row',
-                    }}
-                    onPress={() => console.log('Press MAP button')}
-                  >
-                    <Image
-                      style={{
-                        width: 18,
-                        height: 18,
-                        marginRight: 9,
-                        resizeMode: 'contain',
-                      }}
-                      source={mapIcon}
-                    />
-                    <Text
-                      style={{
-                        ...styles.text,
-                        color: '#212121',
-                        textDecorationLine: 'underline',
-                      }}
-                    >
-                      {item.region}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <PostItem item={item} navigation={navigation} />
             )}
-            keyExtractor={item => item.id}
           />
         </View>
       </SafeAreaView>
