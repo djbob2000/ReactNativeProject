@@ -38,7 +38,6 @@ export const RegisterScreen = ({ navigation }) => {
 
   const submitForm = async () => {
     try {
-      console.log('registerFormData==>', registerForm);
       hideKeyboard();
       dispatch(authSignUpUser(registerForm));
       setRegisterForm(initStateForm); //clear form
